@@ -1,0 +1,3 @@
+routes:
+  paths:
+      save: "/api/v1/usuarios"
