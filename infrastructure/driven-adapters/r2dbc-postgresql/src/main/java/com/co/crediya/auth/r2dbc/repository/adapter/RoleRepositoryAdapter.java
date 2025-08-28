@@ -1,25 +1,21 @@
 package com.co.crediya.auth.r2dbc.repository.adapter;
 
-import com.co.crediya.auth.model.exception.DataNotFoundException;
-import com.co.crediya.auth.model.role.Role;
+import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
+import com.co.crediya.auth.usecase.exception.DataNotFoundException;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 @Repository
 public class RoleRepositoryAdapter
     extends ReactiveAdapterOperations<Role, RoleEntity, String, RoleRepository>
-    implements com.co.crediya.auth.model.role.gateways.RoleRepository {
-  private final TransactionalOperator transactionalOperator;
+    implements com.co.crediya.auth.model.user.gateways.RoleRepository {
 
-  public RoleRepositoryAdapter(
-      RoleRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
+  public RoleRepositoryAdapter(RoleRepository repository, ObjectMapper mapper) {
     super(repository, mapper, d -> mapper.map(d, Role.class));
-    this.transactionalOperator = transactionalOperator;
   }
 
   @Override

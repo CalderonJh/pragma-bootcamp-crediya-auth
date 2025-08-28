@@ -1,4 +1,4 @@
-package com.co.crediya.auth.model.exception;
+package com.co.crediya.auth.usecase.exception;
 
 public class DataNotFoundException extends RuntimeException {
   public DataNotFoundException(String message) {

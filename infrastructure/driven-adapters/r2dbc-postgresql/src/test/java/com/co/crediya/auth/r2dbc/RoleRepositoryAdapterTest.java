@@ -2,11 +2,11 @@ package com.co.crediya.auth.r2dbc;
 
 import static org.mockito.Mockito.when;
 
-import com.co.crediya.auth.model.exception.DataNotFoundException;
-import com.co.crediya.auth.model.role.Role;
+import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.adapter.RoleRepositoryAdapter;
+import com.co.crediya.auth.usecase.exception.DataNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -23,7 +22,6 @@ class RoleRepositoryAdapterTest {
 
   @InjectMocks RoleRepositoryAdapter repositoryAdapter;
   @Mock RoleRepository repository;
-  @Mock TransactionalOperator transactionalOperator;
   @Mock ObjectMapper mapper;
 
   @Test

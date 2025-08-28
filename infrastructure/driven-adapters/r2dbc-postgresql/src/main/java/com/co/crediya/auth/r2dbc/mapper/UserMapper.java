@@ -1,9 +1,8 @@
 package com.co.crediya.auth.r2dbc.mapper;
 
-import com.co.crediya.auth.model.role.Role;
+import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.r2dbc.entity.UserEntity;
-import java.util.UUID;
 
 public class UserMapper {
   private UserMapper() {}

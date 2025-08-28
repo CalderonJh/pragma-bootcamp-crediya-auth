@@ -3,7 +3,7 @@ package com.co.crediya.auth.r2dbc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.co.crediya.auth.model.role.Role;
+import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.entity.UserEntity;
@@ -12,6 +12,8 @@ import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.UserRepository;
 import com.co.crediya.auth.r2dbc.repository.adapter.UserRepositoryAdapter;
 import java.util.UUID;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.transaction.reactive.TransactionalOperator;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -56,6 +59,7 @@ class UserRepositoryAdapterTest {
   }
 
   @Test
+	@DisplayName("Must return true when email exists")
   void mustReturnTrueWhenEmailExists() {
     String email = "test@example.com";
 
@@ -67,6 +71,7 @@ class UserRepositoryAdapterTest {
   }
 
   @Test
+	@DisplayName("Must return false when email does not exist")
   void mustReturnFalseWhenEmailDoesNotExist() {
     String email = "notfound@example.com";
 
@@ -75,5 +80,14 @@ class UserRepositoryAdapterTest {
     Mono<Boolean> result = repositoryAdapter.existsByEmail(email);
 
     StepVerifier.create(result).expectNext(false).verifyComplete();
+  }
+
+	@Test
+	@DisplayName("Get all users test")
+  void getAllUsersTest() {
+    when(repository.findAll()).thenReturn(Flux.just(new UserEntity()));
+		when(mapper.map(any(), any())).thenReturn(new User());
+    Flux<User> result = repositoryAdapter.findAllUsers();
+    StepVerifier.create(result).expectNextCount(1).verifyComplete();
   }
 }

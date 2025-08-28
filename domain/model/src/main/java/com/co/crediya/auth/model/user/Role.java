@@ -1,4 +1,4 @@
-package com.co.crediya.auth.model.role;
+package com.co.crediya.auth.model.user;
 
 import java.util.UUID;
 import lombok.*;

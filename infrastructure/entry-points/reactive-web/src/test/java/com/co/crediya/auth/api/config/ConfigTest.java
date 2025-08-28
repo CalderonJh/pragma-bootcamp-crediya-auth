@@ -2,26 +2,28 @@ package com.co.crediya.auth.api.config;
 
 import com.co.crediya.auth.api.Handler;
 import com.co.crediya.auth.api.RouterRest;
-import com.co.crediya.auth.api.config.path.UserPath;
+import com.co.crediya.auth.usecase.user.UserUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ContextConfiguration(classes = {RouterRest.class, Handler.class, UserPath.class})
 @WebFluxTest
+@ContextConfiguration(classes = {RouterRest.class, Handler.class})
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {
 
   @Autowired private WebTestClient webTestClient;
+  @MockitoBean private UserUseCase userUseCase;
 
   @Test
   void corsConfigurationShouldAllowOrigins() {
     webTestClient
         .get()
-        .uri("/api/usecase/path")
+        .uri("/health")
         .exchange()
         .expectStatus()
         .isOk()

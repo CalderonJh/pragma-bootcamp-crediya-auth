@@ -1,11 +1,11 @@
 package com.co.crediya.auth.usecase.user;
 
-import static com.co.crediya.auth.usecase.util.ValidationUtils.*;
+import static com.co.crediya.auth.usecase.util.validation.ReactiveValidators.*;
 
-import com.co.crediya.auth.model.exception.BusinessRuleException;
-import com.co.crediya.auth.model.role.gateways.RoleRepository;
 import com.co.crediya.auth.model.user.User;
+import com.co.crediya.auth.model.user.gateways.RoleRepository;
 import com.co.crediya.auth.model.user.gateways.UserRepository;
+import com.co.crediya.auth.usecase.exception.BusinessRuleException;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -24,7 +24,7 @@ public class UserUseCase {
         .flatMap(userRepository::saveUser);
   }
 
-  private Flux<User> getUsers() {
+  public Flux<User> getUsers() {
     return userRepository.findAllUsers();
   }
 
@@ -40,23 +40,21 @@ public class UserUseCase {
   }
 
   private Mono<User> validateUserFields(User user) {
-    if (!hasText(user.getName()))
-      return Mono.error(new BusinessRuleException("Name cannot be blank"));
-    if (!hasText(user.getLastName()))
-      return Mono.error(new BusinessRuleException("Last name cannot be blank"));
-    if (isNull(user.getBirthDate()))
-      return Mono.error(new BusinessRuleException("Birth date cannot be null"));
-    if (!hasText(user.getAddress()))
-      return Mono.error(new BusinessRuleException("Address cannot be blank"));
-    if (!hasText(user.getPhoneNumber()))
-      return Mono.error(new BusinessRuleException("Phone number cannot be blank"));
-    if (!isValidEmail(user.getEmail()))
-      return Mono.error(new BusinessRuleException("Email is invalid"));
-    if (isNull(user.getBaseSalary())
-        || !inRange(user.getBaseSalary(), BigDecimal.ZERO, BigDecimal.valueOf(15000000.00)))
-      return Mono.error(
-          new BusinessRuleException("Base salary must be a positive number up to 15,000,000.00"));
-    return Mono.just(user);
+    return hasText(user.getName(), "Name")
+        .then(hasText(user.getLastName(), "Last name"))
+        .then(notNull(user.getBirthDate(), "Birth date"))
+        .then(pastDate(user.getBirthDate(), "Birth date"))
+        .then(hasText(user.getAddress(), "Address"))
+        .then(hasText(user.getPhoneNumber(), "Phone number"))
+        .then(email(user.getEmail()))
+        .then(notNull(user.getBaseSalary(), "Base salary"))
+        .then(
+            range(
+                user.getBaseSalary(),
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(15000000.00),
+                "Base salary"))
+        .thenReturn(user);
   }
 
   private Mono<User> attachDefaultRole(User user) {

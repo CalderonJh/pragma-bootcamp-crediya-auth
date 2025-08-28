@@ -1,6 +1,6 @@
 package com.co.crediya.auth.r2dbc.repository.adapter;
 
-import com.co.crediya.auth.model.role.Role;
+import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.r2dbc.entity.UserEntity;
 import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;

@@ -1,11 +1,8 @@
 package com.co.crediya.auth.model.user;
 
-import com.co.crediya.auth.model.role.Role;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
-
 import lombok.*;
 
 @Getter

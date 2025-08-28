@@ -21,4 +21,10 @@ public class Handler {
         .flatMap(
             saved -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(saved));
   }
+
+  public Mono<ServerResponse> listenGETAllUsers() {
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(userUseCase.getUsers(), User.class);
+  }
 }
