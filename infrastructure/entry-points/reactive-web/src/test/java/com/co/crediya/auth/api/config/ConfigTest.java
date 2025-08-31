@@ -1,6 +1,6 @@
 package com.co.crediya.auth.api.config;
 
-import com.co.crediya.auth.api.Handler;
+import com.co.crediya.auth.api.handler.UserHandler;
 import com.co.crediya.auth.api.RouterRest;
 import com.co.crediya.auth.usecase.user.UserUseCase;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @WebFluxTest
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {
 

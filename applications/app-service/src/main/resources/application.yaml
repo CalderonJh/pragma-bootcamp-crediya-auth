@@ -34,7 +34,3 @@ adapters:
     schema: "public"
     username: "calderonjh"
     password: "securepass"
-
-routes:
-  paths:
-      save: "/api/v1/usuarios"

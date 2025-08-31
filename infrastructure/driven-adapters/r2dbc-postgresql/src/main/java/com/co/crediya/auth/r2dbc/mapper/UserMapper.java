@@ -17,6 +17,7 @@ public class UserMapper {
         .address(user.getAddress())
         .phoneNumber(user.getPhoneNumber())
         .email(user.getEmail())
+        .password(user.getPassword())
         .baseSalary(user.getBaseSalary())
         .build();
   }

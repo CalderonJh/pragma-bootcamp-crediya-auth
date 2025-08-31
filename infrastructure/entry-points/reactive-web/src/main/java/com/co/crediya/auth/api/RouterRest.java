@@ -4,13 +4,8 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-import com.co.crediya.auth.model.user.User;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.co.crediya.auth.api.handler.UserHandler;
+import com.co.crediya.auth.api.routes.UserRoutes;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -25,43 +20,26 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class RouterRest {
   @RouterOperations({
     @RouterOperation(
-        path = "/api/v1/usuarios",
+        path = UserRoutes.SIGN_UP_URL,
         method = RequestMethod.POST,
-        beanClass = Handler.class,
-        beanMethod = "listenPOSTUser",
-        operation =
-            @Operation(
-                operationId = "saveUser",
-                summary = "Registra un nuevo usuario",
-                requestBody =
-                    @RequestBody(content = @Content(schema = @Schema(implementation = User.class))),
-                responses = {
-                  @ApiResponse(
-                      responseCode = "200",
-                      content = @Content(schema = @Schema(implementation = User.class))),
-                })),
+        beanClass = UserHandler.class,
+        beanMethod = "listenPOSTUser"),
     @RouterOperation(
-        path = "/api/v1/usuarios",
+        path = UserRoutes.SIGN_IN_URL,
+        method = RequestMethod.POST,
+        beanClass = UserHandler.class,
+        beanMethod = "listenPOSTLoginUser"),
+    @RouterOperation(
+        path = UserRoutes.BASE_URL,
         method = RequestMethod.GET,
-        beanClass = Handler.class,
-        beanMethod = "listenGETAllUsers",
-        operation =
-            @Operation(
-                operationId = "getUsers",
-                summary = "Obtiene el listado de todos los usuarios",
-                requestBody = @RequestBody(content = @Content()),
-                responses = {
-                  @ApiResponse(
-                      responseCode = "200",
-                      content =
-                          @Content(
-                              array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-                }))
+        beanClass = UserHandler.class,
+        beanMethod = "listenGETAllUsers")
   })
   @Bean
-  public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-    return route(POST("/api/v1/usuarios"), handler::listenPOSTUser)
-        .and(route(GET("/api/v1/usuarios"), s -> handler.listenGETAllUsers()));
+  public RouterFunction<ServerResponse> userRouting(UserHandler handler) {
+    return route(POST(UserRoutes.SIGN_UP_URL), handler::listenPOSTUser)
+        .andRoute(POST(UserRoutes.SIGN_IN_URL), handler::listenPOSTLoginUser)
+        .and(route(GET(UserRoutes.BASE_URL), s -> handler.listenGETAllUsers()));
   }
 
   @Bean

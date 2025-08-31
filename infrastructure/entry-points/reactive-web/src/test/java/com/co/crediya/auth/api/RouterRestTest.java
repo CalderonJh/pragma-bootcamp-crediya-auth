@@ -3,6 +3,7 @@ package com.co.crediya.auth.api;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.co.crediya.auth.api.handler.UserHandler;
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.usecase.user.UserUseCase;
 import org.assertj.core.api.Assertions;
@@ -17,7 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest
-@ContextConfiguration(classes = {RouterRest.class, Handler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
 class RouterRestTest {
 
   @Autowired private WebTestClient webTestClient;

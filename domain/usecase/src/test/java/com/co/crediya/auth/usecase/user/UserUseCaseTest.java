@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.model.user.User;
+import com.co.crediya.auth.model.user.gateways.PasswordEncoder;
 import com.co.crediya.auth.model.user.gateways.RoleRepository;
 import com.co.crediya.auth.model.user.gateways.UserRepository;
 import com.co.crediya.auth.usecase.exception.BusinessRuleException;
@@ -23,6 +24,7 @@ import reactor.test.StepVerifier;
 class UserUseCaseTest {
   private UserRepository userRepository;
   private RoleRepository roleRepository;
+  private PasswordEncoder passwordEncoder;
   private UserUseCase useCase;
   private User user;
 
@@ -30,7 +32,8 @@ class UserUseCaseTest {
   void setUp() {
     roleRepository = mock(RoleRepository.class);
     userRepository = mock(UserRepository.class);
-    useCase = new UserUseCase(userRepository, roleRepository);
+    passwordEncoder = mock(PasswordEncoder.class);
+    useCase = new UserUseCase(userRepository, roleRepository, passwordEncoder);
     user =
         User.builder()
             .name("name")

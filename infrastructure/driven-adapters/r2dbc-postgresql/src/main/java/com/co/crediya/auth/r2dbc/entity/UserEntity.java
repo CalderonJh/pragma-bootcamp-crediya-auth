@@ -26,5 +26,6 @@ public class UserEntity {
   private String address;
   private String phoneNumber;
   private String email;
+  private String password;
   private BigDecimal baseSalary;
 }

@@ -3,6 +3,7 @@ package com.co.crediya.auth.usecase.user;
 import static com.co.crediya.auth.usecase.util.validation.ReactiveValidators.*;
 
 import com.co.crediya.auth.model.user.User;
+import com.co.crediya.auth.model.user.gateways.PasswordEncoder;
 import com.co.crediya.auth.model.user.gateways.RoleRepository;
 import com.co.crediya.auth.model.user.gateways.UserRepository;
 import com.co.crediya.auth.usecase.exception.BusinessRuleException;
@@ -15,12 +16,14 @@ import reactor.core.publisher.Mono;
 public class UserUseCase {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
 
   public Mono<User> saveUser(User user) {
     return Mono.just(user)
         .flatMap(this::validateUserFields)
         .flatMap(this::validateUniqueEmail)
         .flatMap(this::attachDefaultRole)
+        .flatMap(this::encodePassword)
         .flatMap(userRepository::saveUser);
   }
 
@@ -47,6 +50,7 @@ public class UserUseCase {
         .then(hasText(user.getAddress(), "Address"))
         .then(hasText(user.getPhoneNumber(), "Phone number"))
         .then(email(user.getEmail()))
+        .then(hasText(user.getPassword(), "Password"))
         .then(notNull(user.getBaseSalary(), "Base salary"))
         .then(
             range(
@@ -65,5 +69,11 @@ public class UserUseCase {
               user.setRole(role);
               return user;
             });
+  }
+
+  private Mono<User> encodePassword(User user) {
+    String encodedPassword = passwordEncoder.encode(user.getPassword());
+    user.setPassword(encodedPassword);
+    return Mono.just(user);
   }
 }
