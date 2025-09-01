@@ -1,25 +1,28 @@
 package com.co.crediya.auth.usecase.user;
 
 import static com.co.crediya.auth.usecase.util.validation.ReactiveValidators.*;
+import static com.co.crediya.auth.usecase.util.validation.RoleValidator.isAnyRole;
 
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.model.user.gateways.PasswordEncoder;
 import com.co.crediya.auth.model.user.gateways.RoleRepository;
 import com.co.crediya.auth.model.user.gateways.UserRepository;
-import com.co.crediya.auth.usecase.exception.BusinessRuleException;
+import com.co.crediya.auth.usecase.constant.RoleType;
+import com.co.crediya.auth.usecase.exception.ConflictException;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class UserUseCase {
+public class RegisterUserUseCase {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public Mono<User> saveUser(User user) {
+  public Mono<User> execute(User user, UUID actorId) {
     return Mono.just(user)
+        .flatMap(u -> validateActorRole(u, actorId))
         .flatMap(this::validateUserFields)
         .flatMap(this::validateUniqueEmail)
         .flatMap(this::attachDefaultRole)
@@ -27,17 +30,20 @@ public class UserUseCase {
         .flatMap(userRepository::saveUser);
   }
 
-  public Flux<User> getUsers() {
-    return userRepository.findAllUsers();
+  private Mono<User> validateActorRole(User user, UUID actorId) {
+    return roleRepository
+        .findUserRole(actorId)
+        .flatMap(role -> isAnyRole(role.getName(), RoleType.CONSULTANT, RoleType.ADMIN))
+        .thenReturn(user);
   }
-
+	
   private Mono<User> validateUniqueEmail(User user) {
     return userRepository
         .existsByEmail(user.getEmail())
         .flatMap(
             exists -> {
               if (Boolean.TRUE.equals(exists))
-                return Mono.error(new BusinessRuleException("Email already exists"));
+                return Mono.error(new ConflictException("Email already exists"));
               return Mono.just(user);
             });
   }

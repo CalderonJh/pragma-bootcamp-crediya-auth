@@ -20,5 +20,6 @@ public class User {
   private String email;
   private BigDecimal baseSalary;
   private String password;
+  private Integer failedLoginAttempts;
   private Role role;
 }

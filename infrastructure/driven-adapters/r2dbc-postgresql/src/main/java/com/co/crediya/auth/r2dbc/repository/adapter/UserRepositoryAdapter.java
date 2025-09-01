@@ -7,6 +7,7 @@ import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import com.co.crediya.auth.r2dbc.mapper.UserMapper;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.UserRepository;
+import java.util.UUID;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -49,11 +50,21 @@ public class UserRepositoryAdapter
 
   @Override
   public Flux<User> findAllUsers() {
-    return super.findAll();
+    return repository.findAllRow().map(UserMapper::toModel);
   }
 
   @Override
   public Mono<Boolean> existsByEmail(String email) {
     return repository.existsByEmail(email);
+  }
+
+	@Override
+	public Mono<User> findByEmail(String email) {
+    return repository.findByEmail(email).map(UserMapper::toModel);
+	}
+
+  @Override
+  public Mono<User> findById(UUID id) {
+    return repository.findUserById(id).map(UserMapper::toModel);
   }
 }

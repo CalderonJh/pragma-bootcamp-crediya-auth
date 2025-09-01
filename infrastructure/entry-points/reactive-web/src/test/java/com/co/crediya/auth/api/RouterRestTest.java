@@ -4,7 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.co.crediya.auth.api.handler.UserHandler;
+import com.co.crediya.auth.api.routes.UserRoutes;
 import com.co.crediya.auth.model.user.User;
+import com.co.crediya.auth.usecase.user.LoginUseCase;
 import com.co.crediya.auth.usecase.user.UserUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ class RouterRestTest {
 
   @Autowired private WebTestClient webTestClient;
   @MockitoBean private UserUseCase userUseCase;
+  @MockitoBean private LoginUseCase loginUseCase;
 
   @Test
   void listenPostUserTest() {
@@ -30,7 +33,7 @@ class RouterRestTest {
     when(userUseCase.saveUser(any(User.class))).thenReturn(Mono.just(body));
     webTestClient
         .post()
-        .uri("/api/v1/usuarios")
+        .uri(UserRoutes.SIGN_UP_URL)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(body)
         .exchange()
@@ -46,7 +49,7 @@ class RouterRestTest {
     when(userUseCase.getUsers()).thenReturn(Flux.just(body));
     webTestClient
         .get()
-        .uri("/api/v1/usuarios")
+        .uri(UserRoutes.BASE_URL)
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()

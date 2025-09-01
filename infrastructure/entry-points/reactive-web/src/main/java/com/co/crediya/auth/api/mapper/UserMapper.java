@@ -30,6 +30,7 @@ public class UserMapper {
         .phoneNumber(user.getPhoneNumber())
         .email(user.getEmail())
         .baseSalary(user.getBaseSalary())
+        .role(user.getRole().getName())
         .build();
   }
 }

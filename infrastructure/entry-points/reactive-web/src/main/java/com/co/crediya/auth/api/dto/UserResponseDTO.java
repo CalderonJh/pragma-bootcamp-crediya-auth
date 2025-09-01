@@ -34,4 +34,7 @@ public class UserResponseDTO {
 
   @Schema(description = "Salario base del usuario", example = "2500000.00")
   private BigDecimal baseSalary;
+
+  @Schema(description = "Rol del usuario", example = "USER")
+  private String role;
 }

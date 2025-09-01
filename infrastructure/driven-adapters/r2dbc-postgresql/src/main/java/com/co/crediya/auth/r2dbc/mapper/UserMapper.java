@@ -3,6 +3,7 @@ package com.co.crediya.auth.r2dbc.mapper;
 import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.r2dbc.entity.UserEntity;
+import com.co.crediya.auth.r2dbc.projection.UserRow;
 
 public class UserMapper {
   private UserMapper() {}
@@ -18,6 +19,7 @@ public class UserMapper {
         .phoneNumber(user.getPhoneNumber())
         .email(user.getEmail())
         .password(user.getPassword())
+        .failedLoginAttempts(user.getFailedLoginAttempts())
         .baseSalary(user.getBaseSalary())
         .build();
   }
@@ -33,6 +35,25 @@ public class UserMapper {
         .phoneNumber(entity.getPhoneNumber())
         .email(entity.getEmail())
         .baseSalary(entity.getBaseSalary())
+        .password(entity.getPassword())
+        .failedLoginAttempts(entity.getFailedLoginAttempts())
+        .build();
+  }
+
+  public static User toModel(UserRow row) {
+    return User.builder()
+        .id(row.getId())
+        .role(new Role(row.getRoleId(), null))
+        .name(row.getName())
+        .lastName(row.getLastName())
+        .birthDate(row.getBirthDate())
+        .address(row.getAddress())
+        .phoneNumber(row.getPhoneNumber())
+        .email(row.getEmail())
+        .baseSalary(row.getBaseSalary())
+        .password(row.getPassword())
+        .failedLoginAttempts(row.getFailedLoginAttempts())
+        .role(new Role(row.getRoleId(), row.getRoleName()))
         .build();
   }
 

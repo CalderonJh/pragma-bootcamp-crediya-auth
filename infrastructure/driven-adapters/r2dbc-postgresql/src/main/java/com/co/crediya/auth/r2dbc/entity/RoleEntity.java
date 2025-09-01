@@ -17,5 +17,6 @@ public class RoleEntity {
   @Column("id")
   private UUID id;
 
+	@Column("name")
   private String name;
 }

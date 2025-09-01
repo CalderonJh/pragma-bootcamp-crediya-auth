@@ -8,6 +8,7 @@ import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.entity.UserEntity;
 import com.co.crediya.auth.r2dbc.mapper.UserMapper;
+import com.co.crediya.auth.r2dbc.projection.UserRow;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.UserRepository;
 import com.co.crediya.auth.r2dbc.repository.adapter.UserRepositoryAdapter;
@@ -85,8 +86,7 @@ class UserRepositoryAdapterTest {
 	@Test
 	@DisplayName("Get all users test")
   void getAllUsersTest() {
-    when(repository.findAll()).thenReturn(Flux.just(new UserEntity()));
-		when(mapper.map(any(), any())).thenReturn(new User());
+    when(repository.findAllRow()).thenReturn(Flux.just(new UserRow()));
     Flux<User> result = repositoryAdapter.findAllUsers();
     StepVerifier.create(result).expectNextCount(1).verifyComplete();
   }
