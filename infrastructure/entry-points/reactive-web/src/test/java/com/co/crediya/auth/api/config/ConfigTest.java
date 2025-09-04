@@ -13,7 +13,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @WebFluxTest
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class, TestSecurityConfig.class})
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {
   @Autowired private WebTestClient webTestClient;

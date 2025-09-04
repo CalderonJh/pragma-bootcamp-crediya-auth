@@ -6,6 +6,7 @@ import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.adapter.RoleRepositoryAdapter;
+import com.co.crediya.auth.usecase.constant.RoleType;
 import com.co.crediya.auth.usecase.exception.DataNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -27,18 +28,18 @@ class RoleRepositoryAdapterTest {
   @Test
   void findDefaultRoleTest() {
     UUID id = UUID.randomUUID();
-    RoleEntity roleEntity = new RoleEntity(id, "USER");
-    when(repository.findByName("USER")).thenReturn(Mono.just(roleEntity));
-    when(mapper.map(roleEntity, Role.class)).thenReturn(new Role(id, "USER"));
+    RoleEntity roleEntity = new RoleEntity(id, RoleType.USER.getValue());
+    when(repository.findByName(RoleType.USER.getValue())).thenReturn(Mono.just(roleEntity));
+    when(mapper.map(roleEntity, Role.class)).thenReturn(new Role(id, RoleType.USER.getValue()));
 
     Mono<Role> result = repositoryAdapter.findDefaultRole();
 
-    StepVerifier.create(result).expectNextMatches(r -> r.getName().equals("USER")).verifyComplete();
+    StepVerifier.create(result).expectNextMatches(r -> r.getName().equals(RoleType.USER.getValue())).verifyComplete();
   }
 
   @Test
   void mustErrorWhenDefaultRoleNotFound() {
-    when(repository.findByName("USER")).thenReturn(Mono.empty());
+    when(repository.findByName(RoleType.USER.getValue())).thenReturn(Mono.empty());
 
     Mono<Role> result = repositoryAdapter.findDefaultRole();
 
