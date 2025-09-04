@@ -7,4 +7,5 @@ public class UserRoutes {
   public static final String SIGN_UP_URL = "/public" + BASE_URL + "/registro";
   public static final String SIGN_IN_URL = "/public" + BASE_URL + "/ingreso";
   public static final String GET_BY_ID = BASE_URL + "/{id}";
+  public static final String GET_BY_ID_IN = BASE_URL + "/by-ids";
 }

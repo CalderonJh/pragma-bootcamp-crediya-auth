@@ -3,7 +3,7 @@ package com.co.crediya.auth.api.config;
 import com.co.crediya.auth.api.RouterRest;
 import com.co.crediya.auth.api.handler.UserHandler;
 import com.co.crediya.auth.usecase.user.LoginUseCase;
-import com.co.crediya.auth.usecase.user.UserUseCase;
+import com.co.crediya.auth.usecase.user.RegisterUserUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -18,8 +18,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 class ConfigTest {
   @Autowired private WebTestClient webTestClient;
 
-  @MockitoBean private UserUseCase userUseCase;
+  @MockitoBean private RegisterUserUseCase registerUserUseCase;
   @MockitoBean private LoginUseCase loginUseCase;
+	@MockitoBean private UserHandler userHandler;
 
   @Test
   void corsConfigurationShouldAllowOrigins() {

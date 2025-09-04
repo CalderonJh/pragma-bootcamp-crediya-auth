@@ -2,12 +2,8 @@ package com.co.crediya.auth.api.handler;
 
 import static com.co.crediya.auth.usecase.util.validation.ValidationUtils.hasText;
 
-import com.co.crediya.auth.api.dto.CreateUserDTO;
-import com.co.crediya.auth.api.dto.LoginDTO;
-import com.co.crediya.auth.api.dto.LoginResultDTO;
-import com.co.crediya.auth.api.dto.UserResponseDTO;
+import com.co.crediya.auth.api.dto.*;
 import com.co.crediya.auth.api.mapper.UserMapper;
-import com.co.crediya.auth.model.user.User;
 import com.co.crediya.auth.usecase.user.FindUserUseCase;
 import com.co.crediya.auth.usecase.user.LoginUseCase;
 import com.co.crediya.auth.usecase.user.RegisterUserUseCase;
@@ -17,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +29,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
+@Tag(name = "User operations")
 public class UserHandler {
   private final RegisterUserUseCase registerUserUseCase;
   private final LoginUseCase loginUseCase;
@@ -55,7 +54,6 @@ public class UserHandler {
             auth -> {
               Jwt jwt = auth.getToken();
               UUID actorId = UUID.fromString(jwt.getSubject());
-              System.out.println("Actor ID: " + actorId);
               return serverRequest
                   .bodyToMono(CreateUserDTO.class)
                   .map(UserMapper::toModel)
@@ -82,7 +80,8 @@ public class UserHandler {
             responseCode = "401",
             description = "Si el login falla",
             content =
-                @Content(array = @ArraySchema(schema = @Schema(implementation = LoginDTO.class))))
+                @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = LoginResultDTO.class))))
       })
   public Mono<ServerResponse> listenPOSTLoginUser(ServerRequest serverRequest) {
     return serverRequest
@@ -110,7 +109,9 @@ public class UserHandler {
         @ApiResponse(
             responseCode = "200",
             description = "Lista de usuarios",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))))
+            content =
+                @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))))
       })
   public Mono<ServerResponse> listenGETAllUsers() {
     return ServerResponse.ok()
@@ -125,12 +126,45 @@ public class UserHandler {
         @ApiResponse(
             responseCode = "200",
             description = "Usuario encontrado",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))))
+            content =
+                @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))))
       })
   public Mono<ServerResponse> listenGETUserById(ServerRequest serverRequest) {
     UUID userId = UUID.fromString(serverRequest.pathVariable("id"));
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(findUserUseCase.getById(userId).map(UserMapper::toResponse), UserResponseDTO.class);
+  }
+
+  @Operation(
+      operationId = "getUserByIdIn",
+      summary = "Obtiene información de varios usuarios por sus IDs",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Usuarios encontrado",
+            content =
+                @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))))
+      })
+  public Mono<ServerResponse> listenGETUserByIdIn(ServerRequest serverRequest) {
+    return serverRequest
+        .bodyToMono(UsersIdsDTO.class)
+        .map(UsersIdsDTO::ids)
+        .flatMap(
+            ids -> {
+              if (ids == null || ids.isEmpty()) {
+                return ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(Set.of()), UserResponseDTO.class);
+              } else {
+                return ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(
+                        findUserUseCase.getByIdIn(ids).map(UserMapper::toResponse),
+                        UserResponseDTO.class);
+              }
+            });
   }
 }

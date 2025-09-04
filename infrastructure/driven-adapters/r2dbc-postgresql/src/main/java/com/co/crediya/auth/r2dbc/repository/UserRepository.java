@@ -8,6 +8,7 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface UserRepository
@@ -38,6 +39,27 @@ public interface UserRepository
 	    WHERE u.user_id = :id
 	""")
   Mono<UserRow> findUserById(UUID id);
+
+	  @Query(
+      """
+				    SELECT
+				        u.user_id AS user_id,
+				        u.name AS name,
+				        u.last_name AS last_name,
+				        u.birth_date AS birth_date,
+				        u.address AS address,
+				        u.phone_number AS phone_number,
+				        u.email AS email,
+				        u.password AS password,
+				        u.failed_login_attempts AS failed_login_attempts,
+				        u.base_salary AS base_salary,
+				        r.id AS role_id,
+				        r.name AS role_name
+				    FROM users u
+				    JOIN roles r ON u.role_id = r.id
+				    WHERE u.user_id IN (:ids)
+				""")
+	Flux<UserRow> findByIdIn(Collection<UUID> ids);
 
   @Query(
       """

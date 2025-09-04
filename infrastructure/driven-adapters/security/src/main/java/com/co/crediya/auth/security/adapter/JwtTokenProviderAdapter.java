@@ -2,6 +2,7 @@ package com.co.crediya.auth.security.adapter;
 
 import com.co.crediya.auth.model.user.gateways.TokenProvider;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -23,7 +24,7 @@ public class JwtTokenProviderAdapter implements TokenProvider {
         JwtClaimsSet.builder()
             .subject(subject)
             .issuedAt(Instant.now())
-            .expiresAt(Instant.now().plusSeconds(3600))
+            .expiresAt(Instant.now().plus(7, ChronoUnit.DAYS))
             .claims(c -> c.putAll(claims))
             .build();
 

@@ -7,6 +7,8 @@ import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import com.co.crediya.auth.r2dbc.mapper.UserMapper;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.UserRepository;
+
+import java.util.Collection;
 import java.util.UUID;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -67,4 +69,9 @@ public class UserRepositoryAdapter
   public Mono<User> findById(UUID id) {
     return repository.findUserById(id).map(UserMapper::toModel);
   }
+
+	@Override
+	public Flux<User> findByIdIn(Collection<UUID> ids) {
+    return repository.findByIdIn(ids).map(UserMapper::toModel);
+	}
 }

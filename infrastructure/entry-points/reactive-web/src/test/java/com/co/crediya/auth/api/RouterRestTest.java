@@ -3,11 +3,13 @@ package com.co.crediya.auth.api;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.co.crediya.auth.api.config.TestSecurityConfig;
 import com.co.crediya.auth.api.handler.UserHandler;
 import com.co.crediya.auth.api.routes.UserRoutes;
 import com.co.crediya.auth.model.user.User;
+import com.co.crediya.auth.usecase.user.FindUserUseCase;
 import com.co.crediya.auth.usecase.user.LoginUseCase;
-import com.co.crediya.auth.usecase.user.UserUseCase;
+import com.co.crediya.auth.usecase.user.RegisterUserUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +22,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class, TestSecurityConfig.class})
 class RouterRestTest {
 
   @Autowired private WebTestClient webTestClient;
-  @MockitoBean private UserUseCase userUseCase;
+  @MockitoBean private RegisterUserUseCase registerUserUseCase;
   @MockitoBean private LoginUseCase loginUseCase;
+  @MockitoBean private FindUserUseCase findUserUseCase;
 
   @Test
   void listenPostUserTest() {
     User body = new User();
-    when(userUseCase.saveUser(any(User.class))).thenReturn(Mono.just(body));
+    when(registerUserUseCase.execute(any(User.class), any())).thenReturn(Mono.just(body));
     webTestClient
         .post()
         .uri(UserRoutes.SIGN_UP_URL)
@@ -46,7 +49,7 @@ class RouterRestTest {
   @Test
   void listenGetAllUsersTest() {
     User body = new User();
-    when(userUseCase.getUsers()).thenReturn(Flux.just(body));
+    when(findUserUseCase.getAll()).thenReturn(Flux.just(body));
     webTestClient
         .get()
         .uri(UserRoutes.BASE_URL)

@@ -30,6 +30,11 @@ public class RouterRest {
         beanClass = UserHandler.class,
         beanMethod = "listenPOSTLoginUser"),
     @RouterOperation(
+        path = UserRoutes.GET_BY_ID,
+        method = RequestMethod.GET,
+        beanClass = UserHandler.class,
+        beanMethod = "listenGETUserById"),
+    @RouterOperation(
         path = UserRoutes.BASE_URL,
         method = RequestMethod.GET,
         beanClass = UserHandler.class,
@@ -39,6 +44,8 @@ public class RouterRest {
   public RouterFunction<ServerResponse> userRouting(UserHandler handler) {
     return route(POST(UserRoutes.SIGN_UP_URL), handler::listenPOSTUser)
         .andRoute(POST(UserRoutes.SIGN_IN_URL), handler::listenPOSTLoginUser)
+        .andRoute(GET(UserRoutes.GET_BY_ID), handler::listenGETUserById)
+        .andRoute(POST(UserRoutes.GET_BY_ID_IN), handler::listenGETUserByIdIn)
         .and(route(GET(UserRoutes.BASE_URL), s -> handler.listenGETAllUsers()));
   }
 

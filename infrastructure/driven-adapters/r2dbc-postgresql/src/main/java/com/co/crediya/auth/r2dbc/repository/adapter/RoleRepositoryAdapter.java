@@ -4,6 +4,7 @@ import com.co.crediya.auth.model.user.Role;
 import com.co.crediya.auth.r2dbc.entity.RoleEntity;
 import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
+import com.co.crediya.auth.usecase.constant.RoleType;
 import com.co.crediya.auth.usecase.exception.DataNotFoundException;
 import java.util.UUID;
 import org.reactivecommons.utils.ObjectMapper;
@@ -22,7 +23,7 @@ public class RoleRepositoryAdapter
   @Override
   public Mono<Role> findDefaultRole() {
     return repository
-        .findByName("USER")
+        .findByName(RoleType.USER.getValue())
         .switchIfEmpty(Mono.error(new DataNotFoundException("Default role not found")))
         .map(entity -> mapper.map(entity, Role.class));
   }

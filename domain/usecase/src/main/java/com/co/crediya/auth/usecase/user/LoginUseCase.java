@@ -1,6 +1,7 @@
 package com.co.crediya.auth.usecase.user;
 
 import static com.co.crediya.auth.usecase.constant.Constant.MAX_LOGIN_ATTEMPTS;
+import static com.co.crediya.auth.usecase.constant.Constant.ROLE_CLAIM;
 import static com.co.crediya.auth.usecase.util.validation.ReactiveValidators.hasText;
 
 import com.co.crediya.auth.model.user.LoginResult;
@@ -55,7 +56,7 @@ public class LoginUseCase {
                         MAX_LOGIN_ATTEMPTS,
                         isPasswordCorrect
                             ? tokenProvider.generateToken(
-                                saved.getId().toString(), Map.of("role", saved.getRole()))
+                                saved.getId().toString(), Map.of(ROLE_CLAIM, saved.getRole().getName()))
                             : null)));
   }
 }
