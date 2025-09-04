@@ -28,9 +28,9 @@ cors:
 
 adapters:
   r2dbc:
-    host: "localhost"
-    port: 5432
-    database: "crediya-auth"
-    schema: "public"
-    username: "calderonjh"
-    password: "securepass"
+    host: ${DB_HOST}
+    port: ${DB_PORT}
+    database: ${DB_NAME_AUTH}
+    schema: ${DB_SCHEMA:public}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
