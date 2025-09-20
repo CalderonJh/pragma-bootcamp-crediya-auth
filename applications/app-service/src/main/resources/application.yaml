@@ -1,6 +1,5 @@
 server:
   port: 8081
-
 spring:
   application:
     name: "authorization"
@@ -12,7 +11,6 @@ spring:
       path: "/h2"
   profiles:
     include: null
-
 management:
   endpoints:
     web:
@@ -22,15 +20,14 @@ management:
     health:
       probes:
         enabled: true
-
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
-
 adapters:
   r2dbc:
-    host: ${DB_HOST}
-    port: ${DB_PORT}
-    database: ${DB_NAME_AUTH}
-    schema: ${DB_SCHEMA:public}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    database: "${DB_NAME_AUTH}"
+    schema: "${DB_SCHEMA:public}"
+aws:
+  region: "us-east-1"
+  secrets:
+    rds: "crediya/rds/auth"
+    jwt-key-pair: "jwt/rsa/keys"
