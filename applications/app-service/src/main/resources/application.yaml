@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${PORT:8080}
 spring:
   application:
     name: "authorization"
@@ -24,10 +24,10 @@ cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 adapters:
   r2dbc:
-    database: "${DB_NAME_AUTH}"
+    database: "${DB_NAME:postgres}"
     schema: "${DB_SCHEMA:public}"
 aws:
-  region: "us-east-1"
+  region: "${AWS_REGION:us-east-1}"
   secrets:
-    rds: "crediya/rds/auth"
-    jwt-key-pair: "jwt/rsa/keys"
+    rds: "${AWS_RDS_SECRET}"
+    jwt-key-pair: "${AWS_RSA_KEYS_SECRET}"
