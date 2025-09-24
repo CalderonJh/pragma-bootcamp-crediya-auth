@@ -7,7 +7,6 @@ import com.co.crediya.auth.r2dbc.helper.ReactiveAdapterOperations;
 import com.co.crediya.auth.r2dbc.mapper.UserMapper;
 import com.co.crediya.auth.r2dbc.repository.RoleRepository;
 import com.co.crediya.auth.r2dbc.repository.UserRepository;
-
 import java.util.Collection;
 import java.util.UUID;
 import org.reactivecommons.utils.ObjectMapper;
@@ -74,4 +73,9 @@ public class UserRepositoryAdapter
 	public Flux<User> findByIdIn(Collection<UUID> ids) {
     return repository.findByIdIn(ids).map(UserMapper::toModel);
 	}
+
+  @Override
+  public Flux<User> findByRole(String roleName) {
+    return repository.findByRoleName(roleName).map(UserMapper::toModel);
+  }
 }

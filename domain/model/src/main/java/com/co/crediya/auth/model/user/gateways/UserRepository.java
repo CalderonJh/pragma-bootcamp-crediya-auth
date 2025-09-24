@@ -19,4 +19,6 @@ public interface UserRepository {
 	Mono<User> findById(UUID id);
 
 	Flux<User> findByIdIn(Collection<UUID> ids);
+
+	Flux<User> findByRole(String roleName);
 }

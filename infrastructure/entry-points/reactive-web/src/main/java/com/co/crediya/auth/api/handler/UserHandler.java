@@ -4,6 +4,7 @@ import static com.co.crediya.auth.usecase.util.validation.ValidationUtils.hasTex
 
 import com.co.crediya.auth.api.dto.*;
 import com.co.crediya.auth.api.mapper.UserMapper;
+import com.co.crediya.auth.usecase.constant.RoleType;
 import com.co.crediya.auth.usecase.user.FindUserUseCase;
 import com.co.crediya.auth.usecase.user.LoginUseCase;
 import com.co.crediya.auth.usecase.user.RegisterUserUseCase;
@@ -166,5 +167,23 @@ public class UserHandler {
                         UserResponseDTO.class);
               }
             });
+  }
+
+  @Operation(
+      operationId = "getUserByRole",
+      summary = "Obtiene todos los usuarios que tienen un rol específico",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Usuarios encontrado",
+            content =
+                @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))))
+      })
+  public Mono<ServerResponse> listenGETUserByRole(ServerRequest serverRequest) {
+    RoleType role = serverRequest.queryParam("rol").map(RoleType::fromString).orElse(RoleType.USER);
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(findUserUseCase.getByRole(role).map(UserMapper::toResponse), UserResponseDTO.class);
   }
 }

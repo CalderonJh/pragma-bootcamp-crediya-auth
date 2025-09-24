@@ -5,6 +5,8 @@ import com.co.crediya.auth.model.user.gateways.UserRepository;
 
 import java.util.Collection;
 import java.util.UUID;
+
+import com.co.crediya.auth.usecase.constant.RoleType;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,5 +25,9 @@ public class FindUserUseCase {
 
 	public Flux<User> getByIdIn(Collection<UUID> ids) {
 		return userRepository.findByIdIn(ids);
+	}
+
+	public Flux<User> getByRole(RoleType role) {
+		return userRepository.findByRole(role.getValue());
 	}
 }

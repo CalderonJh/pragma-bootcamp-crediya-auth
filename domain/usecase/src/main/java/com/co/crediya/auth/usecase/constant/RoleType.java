@@ -12,8 +12,12 @@ public enum RoleType {
 
   private final String value;
 
-  public static boolean isAny(String value, RoleType... types) {
-    for (RoleType type : types) if (type.getValue().equalsIgnoreCase(value)) return true;
-    return false;
+  public static RoleType fromString(String role) {
+    for (RoleType roleType : RoleType.values()) {
+      if (roleType.getValue().equalsIgnoreCase(role) || roleType.name().equalsIgnoreCase(role)) {
+        return roleType;
+      }
+    }
+    throw new IllegalArgumentException("No enum constant for value: " + role);
   }
 }
